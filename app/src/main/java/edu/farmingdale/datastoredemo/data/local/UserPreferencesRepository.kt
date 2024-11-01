@@ -34,7 +34,20 @@ class UserPreferencesRepository(
             }
         }
         .map { preferences ->
-            preferences[IS_LINEAR_LAYOUT] ?: true
+            preferences[IS_LINEAR_LAYOUT] ?: false
+        }
+
+    val isDarkTheme: Flow<Boolean> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.e(TAG, "Error reading preferences.", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[IS_DARK_THEME] ?: true
         }
 
 
